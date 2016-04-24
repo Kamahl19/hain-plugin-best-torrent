@@ -1,0 +1,34 @@
+{
+  "name": "hain-plugin-best-torrent",
+  "version": "1.0.0",
+  "description": "Hain plugin to find the best available torrent",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "hain-0.1.0"
+  ],
+  "author": "Martin Litvaj <kamahl19@gmail.com>",
+  "license": "MIT",
+  "hain": {
+    "prefix": "/torrent",
+    "usage": "/torrent something",
+    "icon": "#fa fa-download",
+    "redirect": "/torrent",
+    "group": "Best Torrent"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamahl19/hain-plugin-best-torrent.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kamahl19/hain-plugin-best-torrent/issues"
+  },
+  "homepage": "https://github.com/kamahl19/hain-plugin-best-torrent#readme",
+  "dependencies": {
+    "cheerio": "^0.20.0",
+    "co": "^4.6.0",
+    "got": "^6.3.0"
+  }
+}
