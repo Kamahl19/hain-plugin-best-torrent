@@ -55,19 +55,19 @@ function searchTorrent(query) {
 
 function getRatingColor(rating) {
 	switch(rating) {
-		case '6': 
+		case '6':
 			return '#79CC53';
-		case '5': 
+		case '5':
 			return '#93D177';
-		case '4': 
+		case '4':
 			return '#A3DB8A';
-		case '3': 
+		case '3':
 			return '#C0EAAD';
-		case '2': 
+		case '2':
 			return '#E5C877';
-		case '1': 
+		case '1':
 			return '#DD9658';
-		case '0': 
+		case '0':
 			return '#D64D4A';
 		default:
 			return '#000';
@@ -92,32 +92,33 @@ module.exports = (pluginContext) => {
 		}
 
 		res.add({
-			id: 'temp',
-			title: `Searching for ${query} …`,
+			id: '__temp',
+			title: 'Searching …',
+            icon: '#fa fa-circle-o-notch fa-spin',
 		});
 
 		searchTorrent(query).then((torrents) => {
+            res.remove('__temp');
+
 			const results = torrents.map((t) => ({
 				id: t.hash,
 				title: t.title,
 				desc: `<b>Rating:</b> <span style="background-color: ${getRatingColor(t.rating)}; padding: 3px; color: #fff">${t.rating}</span> | <b>S:</b> ${t.seeds} | <b>P:</b> ${t.peers} | <b>Size:</b> ${t.size}`,
 			}));
 
-			if (!!results.length) {
-				res.remove('temp');
-			}
-			else {
-				res.remove('temp');
+            res.add(results);
+
+			if (!results.length) {
 				res.add({
+                    id: 'error',
 					title: 'No torrents found',
 					desc: `<b>Query:</b> ${query}`,
+                    icon: '#fa fa-close',
 				});
 			}
-
-			res.add(results);
 		}).catch((err) => {
 			toast.enqueue('We are sorry but there has been an error while searching for the best torrent', 3500);
-			
+
 			logger.log(err);
 		});
 	}
