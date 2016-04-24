@@ -1,8 +1,5 @@
-'use strict';
-
 const got = require('got');
 const $ = require('cheerio');
-const co = require('co');
 
 function composeUrl(q, opts) {
     let url = 'https://www.torrentz.eu/';
@@ -15,26 +12,26 @@ function composeUrl(q, opts) {
     url += (opts.orderBy === 'date') ? 'A' : '';
     url += (opts.orderBy === 'size') ? 'S' : '';
 
-    let query = `${q} ${(opts.onlyKnownGroups) ? 'eztv | ettv | rarbg | YIFY' : ''} ${(opts.excludePoorQuality) ? '-CAM -CAMRip -TS -TELESYNC -PDVD -WP -WORKPRINT -TC -TELECINE' : ''}`;
+    const query = `${q} ${(opts.onlyKnownGroups) ? 'eztv | ettv | rarbg | YIFY' : ''} ${(opts.excludePoorQuality) ? '-CAM -CAMRip -TS -TELESYNC -PDVD -WP -WORKPRINT -TC -TELECINE' : ''}`;
 
-    url += '?q=' + encodeURIComponent(query);
+    url += `?q=${encodeURIComponent(query)}`;
 
-	return url;
+    return url;
 }
 
 function searchTorrent(query) {
-	const opts = {
-		onlyKnownGroups: false,
-		excludePoorQuality: true,
-		orderBy: 'rating',
-		quality: 'good',
-	};
+    const opts = {
+        onlyKnownGroups: false,
+        excludePoorQuality: true,
+        orderBy: 'rating',
+        quality: 'good',
+    };
 
-	const url = composeUrl(query, opts);
+    const url = composeUrl(query, opts);
 
-	return got(url).then((res) => {
-		var results = $('div.results', res.body);
-        var items = $('dl', results);
+    return got(url).then((res) => {
+        const results = $('div.results', res.body);
+        const items = $('dl', results);
 
         return items.map((idx, item) => {
             if (!$('a', item).text()) {
@@ -50,82 +47,85 @@ function searchTorrent(query) {
                 peers: $('span.d', item).text(),
             };
         }).get();
-	});
+    });
 }
 
 function getRatingColor(rating) {
-	switch(rating) {
-		case '6':
-			return '#79CC53';
-		case '5':
-			return '#93D177';
-		case '4':
-			return '#A3DB8A';
-		case '3':
-			return '#C0EAAD';
-		case '2':
-			return '#E5C877';
-		case '1':
-			return '#DD9658';
-		case '0':
-			return '#D64D4A';
-		default:
-			return '#000';
-	}
+    switch (rating) {
+        case '6':
+            return '#79CC53';
+        case '5':
+            return '#93D177';
+        case '4':
+            return '#A3DB8A';
+        case '3':
+            return '#C0EAAD';
+        case '2':
+            return '#E5C877';
+        case '1':
+            return '#DD9658';
+        case '0':
+            return '#D64D4A';
+        default:
+            return '#000';
+    }
 }
 
 module.exports = (pluginContext) => {
-	const shell = pluginContext.shell;
-	const logger = pluginContext.logger;
-	const toast = pluginContext.toast;
+    const shell = pluginContext.shell;
+    const logger = pluginContext.logger;
+    const toast = pluginContext.toast;
 
-	function search(q, res) {
-		const query = q.trim();
+    function search(q, res) {
+        const query = q.trim();
 
-		if (query.length <= 0) {
-			res.add({
-				title: 'Please enter search query',
-				desc: 'hain-plugin-best-torrent'
-			});
+        if (query.length <= 0) {
+            res.add({
+                title: 'Please enter search query',
+                desc: 'hain-plugin-best-torrent'
+            });
 
-			return;
-		}
+            return;
+        }
 
-		res.add({
-			id: '__temp',
-			title: 'Searching …',
+        res.add({
+            id: '__temp',
+            title: 'Searching …',
             icon: '#fa fa-circle-o-notch fa-spin',
-		});
+        });
 
-		searchTorrent(query).then((torrents) => {
+        searchTorrent(query).then((torrents) => {
             res.remove('__temp');
 
-			const results = torrents.map((t) => ({
-				id: t.hash,
-				title: t.title,
-				desc: `<b>Rating:</b> <span style="background-color: ${getRatingColor(t.rating)}; padding: 3px; color: #fff">${t.rating}</span> | <b>S:</b> ${t.seeds} | <b>P:</b> ${t.peers} | <b>Size:</b> ${t.size}`,
-			}));
+            const results = torrents.map((t) => ({
+                id: t.hash,
+                payload: t.hash,
+                title: t.title,
+                desc: `<b>Rating:</b> <span style="background-color: ${getRatingColor(t.rating)}; padding: 3px; color: #fff">${t.rating}</span> | <b>S:</b> ${t.seeds} | <b>P:</b> ${t.peers} | <b>Size:</b> ${t.size}`,
+            }));
 
             res.add(results);
 
-			if (!results.length) {
-				res.add({
+            if (!results.length) {
+                res.add({
                     id: 'error',
-					title: 'No torrents found',
-					desc: `<b>Query:</b> ${query}`,
+                    title: 'No torrents found',
+                    desc: `<b>Query:</b> ${query}`,
                     icon: '#fa fa-close',
-				});
-			}
-		}).catch((err) => {
-			toast.enqueue('We are sorry but there has been an error while searching for the best torrent', 3500);
+                });
+            }
+        }).catch((err) => {
+            toast.enqueue('We are sorry but there has been an error while searching for the best torrent', 3500);
 
-			logger.log(err);
-		});
-	}
+            logger.log(err);
+        });
+    }
 
-	function execute(id) {
-		shell.openExternal(`https://www.torrentz.eu/${id}`);
-	}
+    function execute(id, payload) {
+        if (payload) {
+            shell.openExternal(`https://www.torrentz.eu/${payload}`);
+        }
+    }
 
-	return { search, execute };
-}
+    return { search, execute };
+};

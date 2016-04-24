@@ -1,6 +1,6 @@
 {
   "name": "hain-plugin-best-torrent",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Hain plugin to find the best available torrent",
   "main": "index.js",
   "scripts": {
@@ -28,7 +28,12 @@
   "homepage": "https://github.com/kamahl19/hain-plugin-best-torrent#readme",
   "dependencies": {
     "cheerio": "^0.20.0",
-    "co": "^4.6.0",
     "got": "^6.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^2.8.0",
+    "eslint-config-airbnb-base": "^1.0.3",
+    "eslint-plugin-babel": "^3.2.0",
+    "eslint-plugin-import": "^1.5.0"
   }
 }
