@@ -1,6 +1,6 @@
 {
   "name": "hain-plugin-best-torrent",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Hain plugin to find the best available torrent",
   "main": "index.js",
   "scripts": {

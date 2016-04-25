@@ -6,7 +6,7 @@
 - Run this command in the Hain input:
 
 ```
-/hpm install torrent
+/hpm install best-torrent
 ```
 
 ## Usage
