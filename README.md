@@ -17,4 +17,4 @@
 
 ## LICENSE
 
-[MIT License](LICENSE) &copy; Martin Litvaj
+[MIT License](LICENSE)
