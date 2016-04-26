@@ -12,7 +12,7 @@ function composeUrl(q, opts) {
     url += (opts.orderBy === 'date') ? 'A' : '';
     url += (opts.orderBy === 'size') ? 'S' : '';
 
-    const query = `${q}${(opts.onlyKnownGroups) ? 'eztv | ettv | rarbg | YIFY' : ''}${(opts.excludePoorQuality) ? '-CAM -CAMRip -TS -TELESYNC -PDVD -WP -WORKPRINT -TC -TELECINE' : ''}`;
+    const query = `${q} ${(opts.onlyKnownGroups) ? 'eztv | ettv | rarbg | YIFY' : ''} ${(opts.excludePoorQuality) ? '-CAM -CAMRip -TS -TELESYNC -PDVD -WP -WORKPRINT -TC -TELECINE' : ''}`;
 
     url += `?q=${encodeURIComponent(query)}`;
 
