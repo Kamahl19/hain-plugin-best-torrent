@@ -52,7 +52,7 @@ module.exports = (pluginContext) => {
 
     function execute(id, payload) {
         if (payload) {
-            shell.openExternal(`https://www.torrentz.eu/${payload}`);
+            shell.openExternal(`https://www.newtorrentz.com/${payload}`);
         }
     }
 

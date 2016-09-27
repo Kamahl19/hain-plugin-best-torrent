@@ -2,7 +2,7 @@ const got = require('got');
 const $ = require('cheerio');
 
 function composeUrl(q, opts) {
-    let url = 'https://www.torrentz.eu/';
+    let url = 'https://www.newtorrentz.com/';
 
     url += (opts.quality === 'any') ? 'any' : '';
     url += (opts.quality === 'good') ? 'search' : '';
